@@ -3,6 +3,7 @@ import pandas as pd
 with open(sys.argv[1]) as file:
     data = json.load(file)['assignments']
 
+book_titles = [guide['source'] for guide in data]
 
 def flatten_dict(dict: dict):
     output = [{'heading': dict['heading'], 'snippets': dict['snippets']}]
@@ -13,7 +14,6 @@ def flatten_dict(dict: dict):
         output.extend(children)
     return output
     
-
 def flatten_headings(headings: list):
     output = []
     for heading in headings:
@@ -26,11 +26,6 @@ def flatten_data(data: list):
         output.append(flatten_headings(guide['headings']))
     return output
 
-input = data
-output = flatten_data(input)
-
-book_titles = [guide['source'] for guide in data]
-
 def export_to_csv(dicts: list, id, book_title):
     with open(f"{book_title}.csv", 'w', newline = '', errors='ignore') as csvfile:
         fieldnames = ['book_title', 'heading', 'snippets']
@@ -38,7 +33,6 @@ def export_to_csv(dicts: list, id, book_title):
         writer.writeheader()
         writer.writerows(dicts)
         
-
 def remove_punctuation(word):
     def is_alphanumsp(c): return c.isalnum() or c == ' '
     filtered = [c for c in word if is_alphanumsp(c)]
