@@ -17,12 +17,11 @@ with open('test_sheet.csv') as f:
         principles = correct.split('- ')
         for principle in principles:
             if principle:
-               output.append({'book_title': book_title, 'heading': heading, 'principle': principle.strip(), 'snippets': snippets})
+                output.append({'book_title': book_title, 'heading': heading, 'snippets': snippets, 'principle': principle.strip()})
 
       
 with open('test_output.csv', 'w', newline='') as csvfile:
-    fieldnames = ['book_title', 'heading', 'principle', 'snippets']
+    fieldnames = ['book_title', 'heading', 'snippets', 'principle']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
     writer.writerows(output)
-
