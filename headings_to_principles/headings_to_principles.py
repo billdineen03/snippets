@@ -16,7 +16,7 @@ with open('test_sheet.csv') as f:
             correct = row[7]
         principles = correct.split('- ')
         for principle in principles:
-            if principle:
+            if principle and principle != "None":
                 output.append({'book_title': book_title, 'heading': heading, 'principle': principle.strip(), 'snippets': snippets})
 
       
