@@ -24,7 +24,7 @@ with open('working_file.csv') as f:
             raise Exception(f"Invalid validity status in row {i+1}")
         book_title = row[0]
         heading = row[1]
-        snippets = row[2].split('",')
+        snippets = row[2]
         
         principles = correct.split('- ')
         for principle in principles:
@@ -45,8 +45,7 @@ with open(f'{md_name}.md', 'w') as markdown_file:
             if i == 0:
                 continue
             markdown_file.write('# principle: ' + row[2] + '\n\n')
-            snippets = literal_eval(row[3])
-            print(type(snippets))
+            snippets = row[3].split('",')
             for i, snippet in enumerate(snippets):
                 markdown_file.write(f'## snippet {i+1}:\n\n' + snippet.replace('\\n', '\n') + '\n\n')
 
