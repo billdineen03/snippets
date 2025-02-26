@@ -1,7 +1,10 @@
-import csv
+import csv, os
 import pandas as pd
 
-with open('test_sheet.csv') as f:
+read_file = pd.read_excel('test_sheet.xlsx')
+read_file.to_csv('working_file.csv', index = None, header = True)
+
+with open('working_file.csv') as f:
     output = []
     reader = csv.reader(f)
     for i, row in enumerate(reader):
@@ -30,3 +33,18 @@ with open('test_output.csv', 'w', newline='') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
     writer.writerows(output)
+
+with open('test_output.md', 'w') as markdown_file:
+    with open('test_output.csv') as new_sheet:
+        new_reader = csv.reader(new_sheet)
+        for i, row in enumerate(new_reader):
+            if i == 0:
+                continue
+            markdown_file.write('# principle: ' + row[2] + '\n\n')
+            snippets = row[3].split('[')
+            for i, snippet in enumerate(snippets):
+                if i == 0:
+                    continue
+                markdown_file.write(f'## snippet {i}:\n\n' + snippet.strip(']').replace('\\n', '\n') + '\n\n')
+           
+os.remove('working_file.csv')
