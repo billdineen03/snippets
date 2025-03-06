@@ -38,6 +38,8 @@ def remove_punctuation(word):
     filtered = [c for c in word if is_alphanumsp(c)]
     return ''.join(filtered)
 
+output = flatten_data(data)
+
 for id, guide in enumerate(output):
     book_title = remove_punctuation(book_titles[id])
     export_to_csv(guide, id, book_title)
