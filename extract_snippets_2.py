@@ -1,4 +1,4 @@
-import json, csv, sys
+import json, csv, sys, os
 import pandas as pd
 with open(sys.argv[1]) as file:
     data = json.load(file)['assignments']
@@ -26,7 +26,7 @@ def flatten_data(data: list):
         output.append(flatten_headings(guide['headings']))
     return output
 
-def export_to_csv(dicts: list, id, book_title):
+def export_to_csv(dicts: list, book_title):
     with open(f"{book_title}.csv", 'w', newline = '', errors='ignore') as csvfile:
         fieldnames = ['book_title', 'heading', 'snippets']
         writer = csv.DictWriter(csvfile, fieldnames = fieldnames, restval=book_title)
@@ -42,8 +42,9 @@ output = flatten_data(data)
 
 for id, guide in enumerate(output):
     book_title = remove_punctuation(book_titles[id])
-    export_to_csv(guide, id, book_title)
-    with open(f"{book_title}.csv") as f:
+    file_name = f"{book_title}.csv"
+    export_to_csv(guide, book_title)
+    with open(file_name) as f:
         df = pd.read_csv(f)
         df['main_idea'] = ''
         df['definitions'] = ''
@@ -55,8 +56,15 @@ for id, guide in enumerate(output):
         df['valid_explanations?'] = ''
         df['valid_actionables?'] = ''
         df['review_comments'] = ''
-        df['alt_main_idea'] = ''
+        df['alt_main_idea'] = ''    
         df['alt_definitions'] = ''
         df['alt_explanations'] = ''
         df['alt_actionables'] = ''
-        df.to_csv(f"{book_title}.csv", index=False)
+        row_count = df.shape[0] - 1
+    if row_count >= 20:
+        breakpoint = round(row_count / 2)
+        df[:breakpoint].to_csv(f"{book_title}_a.csv", index=False)
+        df[breakpoint:].to_csv(f"{book_title}_b.csv", index=False)
+        os.remove(file_name)
+    else:
+        df.to_csv(file_name, index=False)
