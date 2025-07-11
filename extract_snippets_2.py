@@ -1,4 +1,4 @@
-import json, csv, sys, os
+import json, csv, sys, os, datetime
 import pandas as pd
 with open(sys.argv[1]) as file:
     data = json.load(file)['assignments']
@@ -61,10 +61,11 @@ for id, guide in enumerate(output):
         df['alt_explanations'] = ''
         df['alt_actionables'] = ''
         row_count = df.shape[0] - 1
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H_%M_%S")
     if row_count >= 20:
         breakpoint = round(row_count / 2)
-        df[:breakpoint].to_csv(f"{book_title}_a.csv", index=False)
-        df[breakpoint:].to_csv(f"{book_title}_b.csv", index=False)
-        os.remove(file_name)
+        df[:breakpoint].to_csv(f"{book_title}_a {timestamp}.csv", index=False)
+        df[breakpoint:].to_csv(f"{book_title}_b {timestamp}.csv", index=False)
     else:
-        df.to_csv(file_name, index=False)
+        df.to_csv(f"{file_name} {timestamp}.csv", index=False)
+    os.remove(file_name)
